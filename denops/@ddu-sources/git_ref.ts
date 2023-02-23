@@ -29,7 +29,8 @@ export class Source extends BaseSource<Params> {
           if (gitRef.startsWith("refs/heads/")) {
             const branch = gitRef.slice(gitRef.lastIndexOf("/")+1)
             controller.enqueue([{
-              word: branch,
+              word: gitRef,
+              display: branch,
               kind: "git_branch",
               action: { branch: branch },
             }])
@@ -40,7 +41,8 @@ export class Source extends BaseSource<Params> {
           if (gitRef.startsWith("refs/tags/")) {
             const tag = gitRef.slice(gitRef.lastIndexOf("/")+1)
             controller.enqueue([{
-              word: tag,
+              word: gitRef,
+              display: tag,
               kind: "git_tag",
               action: { tag: tag },
             }])
