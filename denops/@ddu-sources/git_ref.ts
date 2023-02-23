@@ -19,6 +19,7 @@ export class Source extends BaseSource<Params> {
         const result = cmd.outputSync();
         const stdout = decoder.decode(result.stdout);
 
+        const items: Item<ActionData>[] = [];
         stdout.split(/\r?\n/).forEach((line) => {
           if (line == "") {
             return;
@@ -28,19 +29,19 @@ export class Source extends BaseSource<Params> {
 
           if (gitRef.startsWith("refs/heads/")) {
             const branch = gitRef.slice(gitRef.lastIndexOf("/")+1)
-            controller.enqueue([{
+            items.push({
               word: gitRef,
               display: branch,
               kind: "git_branch",
               action: { branch: branch },
-            }])
+            })
 
             return;
           }
 
           if (gitRef.startsWith("refs/remotes/")) {
             const branch = gitRef.slice("refs/remotes/".length)
-            controller.enqueue([{
+            items.push({
               word: gitRef,
               display: branch,
               kind: "git_branch",
@@ -48,14 +49,14 @@ export class Source extends BaseSource<Params> {
               highlights: [
                 { name: "remote", hl_group: "Identifier", col: 1, width: branch.length }
               ],
-            }])
+            })
 
             return;
           }
 
           if (gitRef.startsWith("refs/tags/")) {
             const tag = gitRef.slice(gitRef.lastIndexOf("/")+1)
-            controller.enqueue([{
+            items.push({
               word: gitRef,
               display: tag,
               kind: "git_tag",
@@ -63,11 +64,13 @@ export class Source extends BaseSource<Params> {
               highlights: [
                 { name: "tag", hl_group: "Tag", col: 1, width: tag.length }
               ],
-            }])
+            })
 
             return;
           }
         })
+
+        controller.enqueue(items);
 
         controller.close();
       }
