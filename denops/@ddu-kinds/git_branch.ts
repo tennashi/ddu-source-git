@@ -2,6 +2,7 @@ import { BaseKind, ActionArguments, ActionFlags } from "https://deno.land/x/ddu_
 
 export type ActionData = {
   branch: string;
+  isRemote?: boolean;
 };
 
 type Params = Record<never, never>;
@@ -14,7 +15,13 @@ export class Kind extends BaseKind<Params> {
       for (const item of args.items) {
         const action = item?.action as ActionData;
 
-        const cmd = new Deno.Command("git", { args: ["switch", action.branch] });
+        let cmd: Deno.Command
+        if (action?.isRemote) {
+          cmd = new Deno.Command("git", { args: ["switch", "--detach", action.branch] });
+        } else {
+          cmd = new Deno.Command("git", { args: ["switch", action.branch] });
+        }
+
         const result = cmd.outputSync();
 
         if (!result.success) {

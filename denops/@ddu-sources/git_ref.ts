@@ -38,6 +38,18 @@ export class Source extends BaseSource<Params> {
             return;
           }
 
+          if (gitRef.startsWith("refs/remotes/")) {
+            const branch = gitRef.slice("refs/remotes/".length)
+            controller.enqueue([{
+              word: gitRef,
+              display: branch,
+              kind: "git_branch",
+              action: { branch: branch, isRemote: true },
+            }])
+
+            return;
+          }
+
           if (gitRef.startsWith("refs/tags/")) {
             const tag = gitRef.slice(gitRef.lastIndexOf("/")+1)
             controller.enqueue([{
