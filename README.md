@@ -8,6 +8,18 @@ This source collects git refs (branchs and tags).
 * [Shougo/ddu.vim](https://github.com/Shougo/ddu.vim)
 * [git/git](https://github.com/git/git)
 
+# Supported actions
+## `git_branch` kind
+* `switch`: `git switch <branch_name>`
+* `create`: `git branch <branch_name>`
+* `tag`: `git tag <tag_name> <branch_name>`
+* `delete`: `git branch --delete <branch_name>`
+
+## `git_tag` kind
+* `switch`: `git switch --detach <tag_name>`
+* `create`: `git tag <tag_name>`
+* `delete`: `git tag --delete <tag_name>`
+
 # Example
 ```vim
 " Set default kind action.
