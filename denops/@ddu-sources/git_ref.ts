@@ -10,12 +10,15 @@ type ActionData = GitBranchActionData | GitTagActionData
 export class Source extends BaseSource<Params> {
   kind = ""
 
-  gather(_args: GatherArguments<Params>): ReadableStream<Item<ActionData>[]> {
+  gather(args: GatherArguments<Params>): ReadableStream<Item<ActionData>[]> {
     const decoder = new TextDecoder()
 
     return new ReadableStream({
-      start(controller) {
-        const cmd = new Deno.Command("git", { args: ["show-ref"] });
+      async start(controller) {
+        const getCwdResult = await args.denops.call("getcwd")
+        const cwd = getCwdResult as string
+
+        const cmd = new Deno.Command("git", { args: ["show-ref"], cwd: cwd });
         const result = cmd.outputSync();
         const stdout = decoder.decode(result.stdout);
 
