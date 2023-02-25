@@ -1,8 +1,0 @@
-ddu-kind-git_branch-action-switch	ddu-source-git_ref.txt	/*ddu-kind-git_branch-action-switch*
-ddu-kind-git_tag-action-switch	ddu-source-git_ref.txt	/*ddu-kind-git_tag-action-switch*
-ddu-source-git_ref-actions	ddu-source-git_ref.txt	/*ddu-source-git_ref-actions*
-ddu-source-git_ref-contents	ddu-source-git_ref.txt	/*ddu-source-git_ref-contents*
-ddu-source-git_ref-examples	ddu-source-git_ref.txt	/*ddu-source-git_ref-examples*
-ddu-source-git_ref-install	ddu-source-git_ref.txt	/*ddu-source-git_ref-install*
-ddu-source-git_ref-introduction	ddu-source-git_ref.txt	/*ddu-source-git_ref-introduction*
-ddu-source-git_ref.txt	ddu-source-git_ref.txt	/*ddu-source-git_ref.txt*
