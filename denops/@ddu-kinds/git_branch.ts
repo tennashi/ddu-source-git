@@ -57,6 +57,34 @@ export class Kind extends BaseKind<Params> {
 
       return ActionFlags.RefreshItems;
     },
+
+    tag: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
+      const tagName = await input(args.denops, {
+        prompt: "(tag name)> ",
+      });
+
+      if (!tagName) {
+        return ActionFlags.Persist;
+      }
+
+      const getCwdResult = await args.denops.call("getcwd")
+      const cwd = getCwdResult as string
+
+      if (args.items.length > 1) {
+        console.log("don't support multiple items")
+      }
+      
+      const action = args.items[0]?.action as ActionData
+      const cmd = new Deno.Command("git", { args: ["tag", tagName, action.branch], cwd: cwd });
+
+      const result = cmd.outputSync();
+
+      if (!result.success) {
+        console.log(decoder.decode(result.stderr));
+      }
+
+      return ActionFlags.RefreshItems;
+    },
   }
 
   params(): Params {
