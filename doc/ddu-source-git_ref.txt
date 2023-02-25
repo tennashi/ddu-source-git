@@ -52,16 +52,35 @@ EXAMPLES                                         *ddu-source-git_ref-examples*
 ACTIONS                                           *ddu-source-git_ref-actions*
 
 ------------------------------------------------------------------------------
-GITBRANCH                                  *ddu-kind-git_branch-action-switch*
+GITBRANCH                                        *ddu-kind-git_branch-actions*
 
-switch
+switch                                     *ddu-kind-git_branch-action-switch*
+
 		Run `git switch <branch>`
 
-------------------------------------------------------------------------------
-GITTAG                                        *ddu-kind-git_tag-action-switch*
+create                                     *ddu-kind-git_branch-action-create*
 
-switch
+		Run `git branch <branch>`
+
+delete                                     *ddu-kind-git_branch-action-delete*
+
+		Run `git branch --delete <branch>`
+
+tag                                           *ddu-kind-git_branch-action-tag*
+
+		Run `git tag <branch> <tag>`
+
+------------------------------------------------------------------------------
+GITTAG                                              *ddu-kind-git_tag-actions*
+
+switch                                        *ddu-kind-git_tag-action-switch*
 		Run `git switch --detach <tag>`
+
+create                                        *ddu-kind-git_tag-action-create*
+		Run `git tag <tag>`
+
+delete                                        *ddu-kind-git_tag-action-delete*
+		Run `git tag --delete <tag>`
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:
