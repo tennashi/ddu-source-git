@@ -1,5 +1,6 @@
 import { BaseKind, ActionArguments, ActionFlags } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
 import { input } from "https://deno.land/x/denops_std@v4.0.0/helper/mod.ts";
+import { executable } from "https://deno.land/x/denops_std@v4.0.0/function/mod.ts";
 
 export type ActionData = {
   branch: string;
@@ -127,6 +128,30 @@ export class Kind extends BaseKind<Params> {
 
       if (!result.success) {
         console.log(decoder.decode(result.stderr));
+      }
+
+      return ActionFlags.RefreshItems;
+    },
+
+    create_pr: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
+      const hasGitHubCli = await executable(args.denops, "gh") as boolean;
+      if (!hasGitHubCli) {
+        console.log("create_pr action requires `gh` command.");
+        return ActionFlags.Persist;
+      }
+
+      const getCwdResult = await args.denops.call("getcwd");
+      const cwd = getCwdResult as string;
+
+      for (const item of args.items) {
+        const action = item?.action as ActionData;
+
+        const cmd = new Deno.Command("gh", { args: ["pr", "create", "--head", action.branch, "--fill"], cwd: cwd });
+        const result = cmd.outputSync();
+
+        if (!result.success) {
+          console.log(decoder.decode(result.stderr));
+        }
       }
 
       return ActionFlags.RefreshItems;
