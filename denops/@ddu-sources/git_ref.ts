@@ -31,7 +31,7 @@ export class Source extends BaseSource<Params> {
           const gitRef = line.slice(line.indexOf(" ")+1);
 
           if (gitRef.startsWith("refs/heads/")) {
-            const branch = gitRef.slice(gitRef.lastIndexOf("/")+1)
+            const branch = gitRef.slice("refs/heads/".length)
             items.push({
               word: gitRef,
               display: branch,
@@ -58,7 +58,7 @@ export class Source extends BaseSource<Params> {
           }
 
           if (gitRef.startsWith("refs/tags/")) {
-            const tag = gitRef.slice(gitRef.lastIndexOf("/")+1)
+            const tag = gitRef.slice("refs/tags/".length)
             items.push({
               word: gitRef,
               display: tag,
