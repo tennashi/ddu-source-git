@@ -14,6 +14,8 @@ This source collects git refs (branchs and tags).
 * `create`: `git branch <branch_name>`
 * `tag`: `git tag <tag_name> <branch_name>`
 * `delete`: `git branch --delete <branch_name>`
+* `push`: `git push --set-upstream <remote_name> <branch_name>`
+* `pull`: `git pull --set-upstream <remote_name> <branch_name>`
 
 ## `git_tag` kind
 * `switch`: `git switch --detach <tag_name>`
