@@ -70,6 +70,14 @@ tag                                           *ddu-kind-git_branch-action-tag*
 
 		Run `git tag <branch> <tag>`
 
+push                                         *ddu-kind-git_branch-action-push*
+
+		Run `git push --set-upstream <remote> <branch>`
+
+pull                                         *ddu-kind-git_branch-action-pull*
+
+		Run `git pull <remote> <branch>`
+
 ------------------------------------------------------------------------------
 GITTAG                                              *ddu-kind-git_tag-actions*
 
