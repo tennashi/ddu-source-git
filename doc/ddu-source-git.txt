@@ -1,27 +1,41 @@
-*ddu-source-git_ref.txt* git refs source for ddu.vim
+*ddu-source-git.txt* git source for ddu.vim
 
 Version: 0.0.1
 Author: tennashi <tennashio@gmail.com>
 License: MIT
 
 ==============================================================================
-CONTENTS                                         *ddu-source-git_ref-contents*
+CONTENTS                                             *ddu-source-git-contents*
 
-INTRODUCTION                                 |ddu-source-git_ref-introduction|
-INSTALL                                      |ddu-source-git_ref-install|
-EXAMPLES                                     |ddu-source-git_ref-examples|
-PARAMS                                       |ddu-source-git_ref-params|
-ACTIONS                                      |ddu-source-git_ref-actions|
+INTRODUCTION                                 |ddu-source-git-introduction|
+INSTALL                                      |ddu-source-git-install|
+EXAMPLES                                     |ddu-source-git-examples|
+PARAMS                                       |ddu-source-git-params|
+ACTIONS                                      |ddu-source-git-actions|
   GITBRANCH                                  |ddu-kind-git_branch-actions|
   GITTAG                                     |ddu-kind-git_tag-actions|
+  GITINDEX                                   |ddu-kind-git_index-actions|
+  GITWORKINGTREE                             |ddu-kind-git_working_tree-actions|
 
 ==============================================================================
-INTRODUCTION                                 *ddu-source-git_ref-introduction*
+INTRODUCTION                                     *ddu-source-git-introduction*
 
-This source collects git refs.
+This source collects various item by using `git` command.
+
+Sources:
+
+* `git_ref`: `git show-ref`
+* `git_status`: `git status`
+
+Kinds:
+
+* `git_branch`
+* `git_tag`
+* `git_index`
+* `git_working_tree`
 
 ==============================================================================
-INSTALL                                           *ddu-source-git_ref-install*
+INSTALL                                               *ddu-source-git-install*
 
 Please install all of the following plugins
 
@@ -29,7 +43,7 @@ https://github.com/vim-denops/denops.vim
 https://github.com/Shougo/ddu.vim
 
 ==============================================================================
-EXAMPLES                                         *ddu-source-git_ref-examples*
+EXAMPLES                                             *ddu-source-git-examples*
 
 >
 	" Set default kind action.
@@ -41,15 +55,24 @@ EXAMPLES                                         *ddu-source-git_ref-examples*
 	\   'git_branch': {
 	\     'defaultAction': 'switch',
 	\   },
+	\   'git_working_tree': {
+	\     'defaultAction': 'add',
+	\   },
+	\   'git_index': {
+	\     'defaultAction': 'commitAll',
+	\   },
 	\ },
 	\}
 	
 	" Use git_ref source.
 	call ddu#start({'ui': 'ff', 'sources': [{'name': 'git_ref'}]})
+
+	" Use git_status source.
+	call ddu#start({'ui': 'ff', 'sources': [{'name': 'git_status'}]})
 <
 
 ==============================================================================
-ACTIONS                                           *ddu-source-git_ref-actions*
+ACTIONS                                               *ddu-source-git-actions*
 
 ------------------------------------------------------------------------------
 GITBRANCH                                        *ddu-kind-git_branch-actions*
@@ -89,6 +112,21 @@ create                                        *ddu-kind-git_tag-action-create*
 
 delete                                        *ddu-kind-git_tag-action-delete*
 		Run `git tag --delete <tag>`
+
+------------------------------------------------------------------------------
+GITINDEX                                          *ddu-kind-git_index-actions*
+
+restoreStaged                        *ddu-kind-git_index-action-restoreStaged*
+		Run `git restore --staged <path>`
+
+commitAll                                *ddu-kind-git_index-action-commitAll*
+		Run `git commit`
+
+------------------------------------------------------------------------------
+GITWORKINGTREE                             *ddu-kind-git_working_tree-actions*
+
+add                                     *ddu-kind-git_working_tree-action-add*
+		Run `git add <path>`
 
 ==============================================================================
 vim:tw=78:ts=8:ft=help:norl:noet:fen:noet:
