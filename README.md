@@ -32,6 +32,7 @@ This source collects various item by using `git` command.
 
 ## `git_working_tree` kind
 * `add`: `git add <path>`
+* `restore`: `git restore <path>`
 
 # Example
 ```vim
