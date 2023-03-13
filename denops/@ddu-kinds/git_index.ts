@@ -1,4 +1,4 @@
-import { BaseKind, ActionArguments, ActionFlags } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
+import { BaseKind, ActionArguments, ActionFlags } from "https://deno.land/x/ddu_vim@v2.3.1/types.ts";
 import { term_start } from "https://deno.land/x/denops_std@v4.0.0/function/vim/mod.ts";
 
 export type ActionData = {
@@ -43,7 +43,7 @@ export class Kind extends BaseKind<Params> {
         cwd: cwd, term_finish: "close",
       })
 
-      return ActionFlags.RefreshItems;
+      return ActionFlags.RefreshItems | ActionFlags.RestoreCursor;
     },
   }
 
