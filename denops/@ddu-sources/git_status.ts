@@ -86,7 +86,7 @@ function parseFileStatus(line: string): FileStatus {
 }
 
 export class Source extends BaseSource<Params> {
-  kind = "";
+  kind = "git_index";
 
   gather(args: GatherArguments<Params>): ReadableStream<Item<ActionData>[]> {
     const decoder = new TextDecoder();
