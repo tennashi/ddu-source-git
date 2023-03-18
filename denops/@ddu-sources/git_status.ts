@@ -176,7 +176,23 @@ export class Source extends BaseSource<Params> {
               });
               break;
             case "updatedButUnmerged":
-              break;
+              if (fileStatus.indexState === "updatedButUnmerged") {
+                items.push({
+                  word: fileStatus.path,
+                  kind: "git_working_tree",
+                  action: { path: fileStatus.path },
+                  highlights: [
+                    {
+                      name: "conflicted",
+                      hl_group: "DduSourceGitConflicted",
+                      col: 1,
+                      width: byteLength(fileStatus.path),
+                    },
+                  ],
+                });
+                break;
+              }
+              /* falls through */
             default:
               items.push({
                 word: fileStatus.path,
@@ -246,23 +262,7 @@ export class Source extends BaseSource<Params> {
               });
               break;
             case "updatedButUnmerged":
-              if (fileStatus.workingTreeState === "updatedButUnmerged") {
-              items.push({
-                word: fileStatus.path,
-                kind: "git_index",
-                action: { path: fileStatus.path },
-                highlights: [
-                  {
-                    name: "conflicted",
-                    hl_group: "DduSourceGitConflicted",
-                    col: 1,
-                    width: byteLength(fileStatus.path),
-                  },
-                ],
-              });
               break;
-            }
-            /* fall through */
             default:
               items.push({
                 word: fileStatus.path,
