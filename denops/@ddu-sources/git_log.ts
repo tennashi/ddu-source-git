@@ -5,17 +5,20 @@ import { ActionData } from "../@ddu-kinds/git_commit.ts";
 type Params = Record<never, never>;
 
 export class Source extends BaseSource<Params> {
-  kind = "git_commit"
+  kind = "git_commit";
 
   gather(args: GatherArguments<Params>): ReadableStream<Item<ActionData>[]> {
-    const decoder = new TextDecoder()
+    const decoder = new TextDecoder();
 
     return new ReadableStream({
       async start(controller) {
-        const getCwdResult = await args.denops.call("getcwd")
-        const cwd = getCwdResult as string
+        const getCwdResult = await args.denops.call("getcwd");
+        const cwd = getCwdResult as string;
 
-        const cmd = new Deno.Command("git", { args: ["log", "--oneline"], cwd: cwd });
+        const cmd = new Deno.Command("git", {
+          args: ["log", "--oneline"],
+          cwd: cwd,
+        });
         const result = cmd.outputSync();
         const stdout = decoder.decode(result.stdout);
 
@@ -26,7 +29,7 @@ export class Source extends BaseSource<Params> {
           }
 
           const commitHash = line.slice(0, line.indexOf(" "));
-          const subject = line.slice(line.indexOf(" ")+1);
+          const subject = line.slice(line.indexOf(" ") + 1);
 
           items.push({
             word: commitHash,
@@ -38,8 +41,8 @@ export class Source extends BaseSource<Params> {
         controller.enqueue(items);
 
         controller.close();
-      }
-    })
+      },
+    });
   }
 
   params(): Params {

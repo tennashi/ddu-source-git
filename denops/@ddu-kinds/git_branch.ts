@@ -1,4 +1,8 @@
-import { BaseKind, ActionArguments, ActionFlags } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
+import {
+  ActionArguments,
+  ActionFlags,
+  BaseKind,
+} from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
 import { input } from "https://deno.land/x/denops_std@v4.0.0/helper/mod.ts";
 import { executable } from "https://deno.land/x/denops_std@v4.0.0/function/mod.ts";
 
@@ -12,19 +16,28 @@ type Params = Record<never, never>;
 const decoder = new TextDecoder();
 
 export class Kind extends BaseKind<Params> {
-  actions: Record<string, (args: ActionArguments<Params>) => Promise<ActionFlags>> = {
+  actions: Record<
+    string,
+    (args: ActionArguments<Params>) => Promise<ActionFlags>
+  > = {
     switch: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd")
-      const cwd = getCwdResult as string
+      const getCwdResult = await args.denops.call("getcwd");
+      const cwd = getCwdResult as string;
 
       for (const item of args.items) {
         const action = item?.action as ActionData;
 
-        let cmd: Deno.Command
+        let cmd: Deno.Command;
         if (action?.isRemote) {
-          cmd = new Deno.Command("git", { args: ["switch", "--detach", action.branch], cwd: cwd });
+          cmd = new Deno.Command("git", {
+            args: ["switch", "--detach", action.branch],
+            cwd: cwd,
+          });
         } else {
-          cmd = new Deno.Command("git", { args: ["switch", action.branch], cwd: cwd });
+          cmd = new Deno.Command("git", {
+            args: ["switch", action.branch],
+            cwd: cwd,
+          });
         }
 
         const result = cmd.outputSync();
@@ -38,8 +51,8 @@ export class Kind extends BaseKind<Params> {
     },
 
     push: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd")
-      const cwd = getCwdResult as string
+      const getCwdResult = await args.denops.call("getcwd");
+      const cwd = getCwdResult as string;
 
       for (const item of args.items) {
         const action = item?.action as ActionData;
@@ -53,7 +66,10 @@ export class Kind extends BaseKind<Params> {
           remoteName = "origin";
         }
 
-        const cmd = new Deno.Command("git", { args: ["push", "--set-upstream", remoteName, action.branch], cwd: cwd });
+        const cmd = new Deno.Command("git", {
+          args: ["push", "--set-upstream", remoteName, action.branch],
+          cwd: cwd,
+        });
         const result = cmd.outputSync();
 
         if (!result.success) {
@@ -65,8 +81,8 @@ export class Kind extends BaseKind<Params> {
     },
 
     pull: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd")
-      const cwd = getCwdResult as string
+      const getCwdResult = await args.denops.call("getcwd");
+      const cwd = getCwdResult as string;
 
       for (const item of args.items) {
         const action = item?.action as ActionData;
@@ -80,7 +96,10 @@ export class Kind extends BaseKind<Params> {
           remoteName = "origin";
         }
 
-        const cmd = new Deno.Command("git", { args: ["pull", remoteName, action.branch], cwd: cwd });
+        const cmd = new Deno.Command("git", {
+          args: ["pull", remoteName, action.branch],
+          cwd: cwd,
+        });
         const result = cmd.outputSync();
 
         if (!result.success) {
@@ -100,10 +119,13 @@ export class Kind extends BaseKind<Params> {
       const cwd = getCwdResult as string;
 
       if (!branchName) {
-        return ActionFlags.Persist
+        return ActionFlags.Persist;
       }
 
-      const cmd = new Deno.Command("git", { args: ["branch", branchName], cwd: cwd });
+      const cmd = new Deno.Command("git", {
+        args: ["branch", branchName],
+        cwd: cwd,
+      });
       const result = cmd.outputSync();
 
       if (!result.success) {
@@ -122,15 +144,18 @@ export class Kind extends BaseKind<Params> {
         return ActionFlags.Persist;
       }
 
-      const getCwdResult = await args.denops.call("getcwd")
-      const cwd = getCwdResult as string
+      const getCwdResult = await args.denops.call("getcwd");
+      const cwd = getCwdResult as string;
 
       if (args.items.length > 1) {
-        console.log("don't support multiple items")
+        console.log("don't support multiple items");
       }
-      
-      const action = args.items[0]?.action as ActionData
-      const cmd = new Deno.Command("git", { args: ["tag", tagName, action.branch], cwd: cwd });
+
+      const action = args.items[0]?.action as ActionData;
+      const cmd = new Deno.Command("git", {
+        args: ["tag", tagName, action.branch],
+        cwd: cwd,
+      });
 
       const result = cmd.outputSync();
 
@@ -147,10 +172,13 @@ export class Kind extends BaseKind<Params> {
 
       const targetBranches = args.items.map((item) => {
         const action = item.action as ActionData;
-        return action.branch
-      })
+        return action.branch;
+      });
 
-      const cmd = new Deno.Command("git", { args: ["branch", "--delete", ...targetBranches], cwd: cwd });
+      const cmd = new Deno.Command("git", {
+        args: ["branch", "--delete", ...targetBranches],
+        cwd: cwd,
+      });
       const result = cmd.outputSync();
 
       if (!result.success) {
@@ -173,7 +201,10 @@ export class Kind extends BaseKind<Params> {
       for (const item of args.items) {
         const action = item?.action as ActionData;
 
-        const cmd = new Deno.Command("gh", { args: ["pr", "create", "--head", action.branch, "--fill"], cwd: cwd });
+        const cmd = new Deno.Command("gh", {
+          args: ["pr", "create", "--head", action.branch, "--fill"],
+          cwd: cwd,
+        });
         const result = cmd.outputSync();
 
         if (!result.success) {
@@ -183,7 +214,7 @@ export class Kind extends BaseKind<Params> {
 
       return ActionFlags.RefreshItems;
     },
-  }
+  };
 
   params(): Params {
     return {};
