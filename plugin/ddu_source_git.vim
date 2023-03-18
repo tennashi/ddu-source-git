@@ -9,6 +9,8 @@ function s:initialize() abort
  highlight! default link DduSourceGitWorkingTreeAdded DiffAdd
  highlight! default link DduSourceGitWorkingTreeDeleted DiffDelete
  highlight! default link DduSourceGitWorkingTreeChanged DiffChange
+
+ highlight! DduSourceGitConflicted ctermfg=4 ctermbg=6 guifg=Red guibg=Yellow
  
  highlight! DduSourceGitIndexAdded ctermfg=2 guifg=Green
  highlight! DduSourceGitIndexDeleted ctermfg=4 guifg=Red
