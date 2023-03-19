@@ -90,14 +90,6 @@ export class Source extends BaseSource<Params> {
               display: branch,
               kind: "git_branch",
               action: { branch: branch, isRemote: true },
-              highlights: [
-                {
-                  name: "remote",
-                  hl_group: "Identifier",
-                  col: 1,
-                  width: branch.length,
-                },
-              ],
             });
 
             return;
@@ -110,9 +102,6 @@ export class Source extends BaseSource<Params> {
               display: tag,
               kind: "git_tag",
               action: { tag: tag },
-              highlights: [
-                { name: "tag", hl_group: "Tag", col: 1, width: tag.length },
-              ],
             });
 
             return;
