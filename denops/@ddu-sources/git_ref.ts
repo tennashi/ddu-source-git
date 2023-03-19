@@ -5,7 +5,10 @@ import { ensureString } from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 import { ActionData as GitBranchActionData } from "../@ddu-kinds/git_branch.ts";
 import { ActionData as GitTagActionData } from "../@ddu-kinds/git_tag.ts";
 
-type Params = Record<never, never>;
+type Params = {
+  disableRemote: boolean;
+  disableTag: boolean;
+};
 
 type ActionData = GitBranchActionData | GitTagActionData;
 
@@ -44,6 +47,10 @@ export class Source extends BaseSource<Params> {
           }
 
           if (gitRef.startsWith("refs/remotes/")) {
+            if (args.sourceParams.disableRemote) {
+              return;
+            }
+
             const branch = gitRef.slice("refs/remotes/".length);
             items.push({
               word: gitRef,
@@ -56,6 +63,10 @@ export class Source extends BaseSource<Params> {
           }
 
           if (gitRef.startsWith("refs/tags/")) {
+            if (args.sourceParams.disableTag) {
+              return;
+            }
+
             const tag = gitRef.slice("refs/tags/".length);
             items.push({
               word: gitRef,
@@ -76,6 +87,9 @@ export class Source extends BaseSource<Params> {
   }
 
   params(): Params {
-    return {};
+    return {
+      disableRemote: false,
+      disableTag: false,
+    };
   }
 }
