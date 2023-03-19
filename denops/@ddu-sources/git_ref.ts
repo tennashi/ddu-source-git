@@ -13,7 +13,7 @@ type Params = {
 type ActionData = GitBranchActionData | GitTagActionData;
 
 export class Source extends BaseSource<Params> {
-  kind = "";
+  kind = "git_branch";
 
   gather(args: GatherArguments<Params>): ReadableStream<Item<ActionData>[]> {
     const decoder = new TextDecoder();
