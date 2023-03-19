@@ -33,7 +33,6 @@ export class Source extends BaseSource<Params> {
         const stdout = decoder.decode(result.stdout);
 
         const items: Item<ActionData>[] = [];
-        const itemLoaders: Promise<Item<ActionData>>[] = [];
         stdout.split(/\r?\n/).forEach((line) => {
           if (line == "") {
             return;
@@ -43,42 +42,12 @@ export class Source extends BaseSource<Params> {
 
           if (gitRef.startsWith("refs/heads/")) {
             const branch = gitRef.slice("refs/heads/".length);
-
-            itemLoaders.push(
-              new Promise((resolve) => {
-                const cmd = new Deno.Command("git", {
-                  args: ["rev-parse", "--abbrev-ref", `${branch}@{upstream}`],
-                  cwd: cwd,
-                });
-                const result = cmd.outputSync();
-                const stdout = decoder.decode(result.stdout);
-                const upstreamBranch = stdout.trim();
-
-                if (upstreamBranch === "") {
-                  resolve({
-                    word: gitRef,
-                    display: branch,
-                    kind: "git_branch",
-                    action: { branch: branch },
-                  });
-                } else {
-                  resolve({
-                    word: gitRef,
-                    display: `${branch} -> ${upstreamBranch}`,
-                    kind: "git_branch",
-                    action: { branch: branch },
-                    highlights: [
-                      {
-                        name: "remote",
-                        hl_group: "Identifier",
-                        col: byteLength(`${branch} -> `) + 1,
-                        width: byteLength(upstreamBranch),
-                      },
-                    ],
-                  });
-                }
-              }),
-            );
+            items.push({
+              word: gitRef,
+              display: branch,
+              kind: "git_branch",
+              action: { branch: branch },
+            });
 
             return;
           }
@@ -109,9 +78,6 @@ export class Source extends BaseSource<Params> {
         });
 
         controller.enqueue(items);
-
-        const lazyItems = await Promise.all(itemLoaders);
-        controller.enqueue(lazyItems);
 
         controller.close();
       },
