@@ -12,6 +12,47 @@ type Params = {
 
 type ActionData = GitBranchActionData | GitTagActionData;
 
+type GitRef = "tag" | "branch" | "remote_branch";
+
+function parseGitRef(gitRef: string): Item<ActionData> {
+  if (gitRef.startsWith("refs/heads/")) {
+    const branch = gitRef.slice("refs/heads/".length);
+
+    return {
+      word: gitRef,
+      display: branch,
+      kind: "git_branch",
+      action: { branch: branch },
+    };
+  }
+
+  if (gitRef.startsWith("refs/remotes/")) {
+    const branch = gitRef.slice("refs/remotes/".length);
+
+    return {
+      word: gitRef,
+      display: branch,
+      kind: "git_branch",
+      action: { branch: branch, isRemote: true },
+    };
+  }
+
+  if (gitRef.startsWith("refs/tags/")) {
+    const tag = gitRef.slice("refs/tags/".length);
+
+    return {
+      word: gitRef,
+      display: tag,
+      kind: "git_tag",
+      action: { tag: tag },
+    };
+  }
+
+  return {
+    word: gitRef,
+  };
+}
+
 export class Source extends BaseSource<Params> {
   kind = "git_branch";
 
@@ -24,59 +65,11 @@ export class Source extends BaseSource<Params> {
 
         const cmd = new Deno.Command("git", { args: ["show-ref"], cwd: cwd });
         const result = cmd.outputSync();
-        const stdout = decoder.decode(result.stdout);
+        const stdout = decoder.decode(result.stdout).trim();
 
-        const items: Item<ActionData>[] = [];
-        stdout.split(/\r?\n/).forEach((line) => {
-          if (line == "") {
-            return;
-          }
-
+        const items = stdout.split(/\r?\n/).map((line) => {
           const gitRef = line.slice(line.indexOf(" ") + 1);
-
-          if (gitRef.startsWith("refs/heads/")) {
-            const branch = gitRef.slice("refs/heads/".length);
-            items.push({
-              word: gitRef,
-              display: branch,
-              kind: "git_branch",
-              action: { branch: branch },
-            });
-
-            return;
-          }
-
-          if (gitRef.startsWith("refs/remotes/")) {
-            if (args.sourceParams.disableRemote) {
-              return;
-            }
-
-            const branch = gitRef.slice("refs/remotes/".length);
-            items.push({
-              word: gitRef,
-              display: branch,
-              kind: "git_branch",
-              action: { branch: branch, isRemote: true },
-            });
-
-            return;
-          }
-
-          if (gitRef.startsWith("refs/tags/")) {
-            if (args.sourceParams.disableTag) {
-              return;
-            }
-
-            const tag = gitRef.slice("refs/tags/".length);
-            items.push({
-              word: gitRef,
-              display: tag,
-              kind: "git_tag",
-              action: { tag: tag },
-            });
-
-            return;
-          }
+          return parseGitRef(gitRef);
         });
 
         controller.enqueue(items);
