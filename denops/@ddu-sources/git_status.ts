@@ -6,7 +6,10 @@ import { ActionData as GitConflictedFileActionData } from "../@ddu-kinds/git_con
 
 type Params = Record<never, never>;
 
-type ActionData = GitWorkingTreeActionData | GitIndexActionData | GitConflictedFileActionData;
+type ActionData =
+  | GitWorkingTreeActionData
+  | GitIndexActionData
+  | GitConflictedFileActionData;
 
 const encoder = new TextEncoder();
 
