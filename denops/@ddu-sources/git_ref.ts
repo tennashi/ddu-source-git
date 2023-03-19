@@ -1,5 +1,7 @@
 import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
 import { GatherArguments } from "https://deno.land/x/ddu_vim@v2.3.0/base/source.ts";
+import { getcwd } from "https://deno.land/x/denops_std@v4.1.0/function/mod.ts";
+import { ensureString } from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 import { ActionData as GitBranchActionData } from "../@ddu-kinds/git_branch.ts";
 import { ActionData as GitTagActionData } from "../@ddu-kinds/git_tag.ts";
 
@@ -15,8 +17,7 @@ export class Source extends BaseSource<Params> {
 
     return new ReadableStream({
       async start(controller) {
-        const getCwdResult = await args.denops.call("getcwd");
-        const cwd = getCwdResult as string;
+        const cwd = ensureString(await getcwd(args.denops));
 
         const cmd = new Deno.Command("git", { args: ["show-ref"], cwd: cwd });
         const result = cmd.outputSync();
