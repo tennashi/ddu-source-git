@@ -1,8 +1,8 @@
 import {
   BaseFilter,
   DduItem,
-} from "https://deno.land/x/ddu_vim@v2.4.0/types.ts";
-import { FilterArguments } from "https://deno.land/x/ddu_vim@v2.4.0/base/filter.ts";
+} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+import { FilterArguments } from "https://deno.land/x/ddu_vim@v2.5.0/base/filter.ts";
 import { ActionData as GitBranchActionData } from "../@ddu-kinds/git_branch.ts";
 
 type Params = Record<never, never>;

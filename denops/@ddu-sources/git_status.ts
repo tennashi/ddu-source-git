@@ -1,5 +1,5 @@
-import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
-import { GatherArguments } from "https://deno.land/x/ddu_vim@v2.3.0/base/source.ts";
+import { BaseSource, Item } from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+import { GatherArguments } from "https://deno.land/x/ddu_vim@v2.5.0/base/source.ts";
 import { ActionData as GitWorkingTreeActionData } from "../@ddu-kinds/git_working_tree.ts";
 import { ActionData as GitIndexActionData } from "../@ddu-kinds/git_index.ts";
 import { ActionData as GitConflictedFileActionData } from "../@ddu-kinds/git_conflicted_file.ts";

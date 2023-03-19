@@ -2,9 +2,9 @@ import {
   ActionArguments,
   ActionFlags,
   BaseKind,
-} from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
-import { input } from "https://deno.land/x/denops_std@v4.0.0/helper/mod.ts";
-import { executable } from "https://deno.land/x/denops_std@v4.0.0/function/mod.ts";
+} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+import { input } from "https://deno.land/x/denops_std@v4.1.0/helper/mod.ts";
+import { executable } from "https://deno.land/x/denops_std@v4.1.0/function/mod.ts";
 
 export type ActionData = {
   branch: string;

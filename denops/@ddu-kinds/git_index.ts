@@ -2,8 +2,8 @@ import {
   ActionArguments,
   ActionFlags,
   BaseKind,
-} from "https://deno.land/x/ddu_vim@v2.3.1/types.ts";
-import { term_start } from "https://deno.land/x/denops_std@v4.0.0/function/vim/mod.ts";
+} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+import { term_start } from "https://deno.land/x/denops_std@v4.1.0/function/vim/mod.ts";
 
 export type ActionData = {
   path: string;

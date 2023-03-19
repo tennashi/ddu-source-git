@@ -1,7 +1,7 @@
 import {
   ActionArguments,
   ActionFlags,
-} from "https://deno.land/x/ddu_vim@v2.3.0/types.ts";
+} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
 import { Kind as WorkingTreeKind } from "./git_working_tree.ts";
 
 export type ActionData = {
