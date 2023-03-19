@@ -7,16 +7,6 @@ type Params = Record<never, never>;
 
 type ActionData = GitBranchActionData | GitTagActionData;
 
-const encoder = new TextEncoder();
-
-function charposToBytepos(input: string, pos: number): number {
-  return byteLength(input.slice(0, pos));
-}
-
-function byteLength(input: string): number {
-  return encoder.encode(input).length;
-}
-
 export class Source extends BaseSource<Params> {
   kind = "";
 
