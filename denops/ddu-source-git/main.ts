@@ -10,6 +10,10 @@ import {
   ActionData as GitRefActionData,
   collectItems as collectGitRefItems,
 } from "./git_ref/main.ts";
+import {
+  ActionData as GitLogActionData,
+  collectItems as collectGitLogItems,
+} from "./git_log/main.ts";
 
 export function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
@@ -22,6 +26,11 @@ export function main(denops: Denops): Promise<void> {
       const getCwdResult = await getcwd(denops);
       const cwd = getCwdResult as string;
       return collectGitRefItems(cwd);
+    },
+    async gitLog(): Promise<Item<GitLogActionData>[]> {
+      const getCwdResult = await getcwd(denops);
+      const cwd = getCwdResult as string;
+      return collectGitLogItems(cwd);
     },
   };
 
