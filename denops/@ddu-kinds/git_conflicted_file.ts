@@ -3,9 +3,10 @@ import {
   ActionFlags,
 } from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
 import { Kind as WorkingTreeKind } from "./git_working_tree.ts";
+import { FileStatus } from "../ddu-source-git/git_status/file_status.ts";
 
 export type ActionData = {
-  path: string;
+  fileStatus: FileStatus;
 };
 
 type Params = Record<never, never>;
@@ -21,7 +22,7 @@ export class Kind extends WorkingTreeKind {
         for (const item of args.items) {
           const action = item?.action as ActionData;
 
-          args.denops.cmd(`:GinChaperon ${action.path}`);
+          args.denops.cmd(`:GinChaperon ${action.fileStatus.path}`);
         }
 
         return Promise.resolve(ActionFlags.None);

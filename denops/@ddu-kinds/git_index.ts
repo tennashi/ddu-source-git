@@ -4,9 +4,10 @@ import {
   BaseKind,
 } from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
 import { term_start } from "https://deno.land/x/denops_std@v4.1.0/function/vim/mod.ts";
+import { FileStatus } from "../ddu-source-git/git_status/file_status.ts";
 
 export type ActionData = {
-  path: string;
+  fileStatus: FileStatus;
 };
 
 type Params = Record<never, never>;
@@ -38,7 +39,7 @@ export class Kind extends BaseKind<Params> {
         const action = item?.action as ActionData;
 
         const cmd = new Deno.Command("git", {
-          args: ["restore", "--staged", action.path],
+          args: ["restore", "--staged", action.fileStatus.path],
           cwd: cwd,
         });
         const result = cmd.outputSync();

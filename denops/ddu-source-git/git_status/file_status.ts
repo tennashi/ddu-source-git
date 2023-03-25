@@ -85,15 +85,7 @@ export function toConflictedItem(
     return {
       word: fileStatus.path,
       kind: "git_conflicted_file",
-      action: { path: fileStatus.path },
-      highlights: [
-        {
-          name: "conflicted",
-          hl_group: "DduSourceGitConflicted",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ],
+      action: { fileStatus: fileStatus },
     };
   }
 }
@@ -104,64 +96,17 @@ export function toWorkingTreeItem(
   const item: Item<ActionData> = {
     word: fileStatus.path,
     kind: "git_working_tree",
-    action: { path: fileStatus.path },
+    action: { fileStatus: fileStatus },
   };
 
   switch (fileStatus.workingTreeState) {
     case "unmodified":
     case "updatedButUnmerged":
       return;
-    case "untracked":
-      item.highlights = [
-        {
-          name: "working_tree_untracked",
-          hl_group: "DduSourceGitWorkingTreeUntracked",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
-      break;
-    case "added":
-      item.highlights = [
-        {
-          name: "working_tree_added",
-          hl_group: "DduSourceGitWorkingTreeAdded",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
-      break;
-    case "deleted":
-      item.highlights = [
-        {
-          name: "working_tree_deleted",
-          hl_group: "DduSourceGitWorkingTreeDeleted",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
-      break;
-    case "renamed":
     case "copied":
       item.display = `${fileStatus.path} <- ${fileStatus.origPath}`;
-      item.highlights = [
-        {
-          name: "working_tree_changed",
-          hl_group: "DduSourceGitWorkingTreeChanged",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
       break;
     default:
-      item.highlights = [
-        {
-          name: "working_tree_changed",
-          hl_group: "DduSourceGitWorkingTreeChanged",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
       break;
   }
 
@@ -174,7 +119,7 @@ export function toIndexItem(
   const item: Item<ActionData> = {
     word: fileStatus.path,
     kind: "git_index",
-    action: { path: fileStatus.path },
+    action: { fileStatus: fileStatus },
   };
 
   switch (fileStatus.indexState) {
@@ -182,47 +127,10 @@ export function toIndexItem(
     case "untracked":
     case "updatedButUnmerged":
       return;
-    case "added":
-      item.highlights = [
-        {
-          name: "index_added",
-          hl_group: "DduSourceGitIndexAdded",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
-      break;
-    case "deleted":
-      item.highlights = [
-        {
-          name: "index_deleted",
-          hl_group: "DduSourceGitIndexDeleted",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
-      break;
-    case "renamed":
     case "copied":
       item.display = `${fileStatus.path} <- ${fileStatus.origPath}`;
-      item.highlights = [
-        {
-          name: "index_changed",
-          hl_group: "DduSourceGitIndexChanged",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
       break;
     default:
-      item.highlights = [
-        {
-          name: "index_changed",
-          hl_group: "DduSourceGitIndexChanged",
-          col: 1,
-          width: byteLength(fileStatus.path),
-        },
-      ];
       break;
   }
 
