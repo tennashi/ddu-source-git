@@ -6,6 +6,10 @@ import {
   ActionData as GitStatusActionData,
   collectItems as collectGitStatusItems,
 } from "./git_status/main.ts";
+import {
+  ActionData as GitRefActionData,
+  collectItems as collectGitRefItems,
+} from "./git_ref/main.ts";
 
 export function main(denops: Denops): Promise<void> {
   denops.dispatcher = {
@@ -13,6 +17,11 @@ export function main(denops: Denops): Promise<void> {
       const getCwdResult = await getcwd(denops);
       const cwd = getCwdResult as string;
       return collectGitStatusItems(cwd);
+    },
+    async gitRef(): Promise<Item<GitRefActionData>[]> {
+      const getCwdResult = await getcwd(denops);
+      const cwd = getCwdResult as string;
+      return collectGitRefItems(cwd);
     },
   };
 
