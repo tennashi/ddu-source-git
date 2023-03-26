@@ -8,7 +8,7 @@ import { executable } from "https://deno.land/x/denops_std@v4.1.0/function/mod.t
 
 export type ActionData = {
   branch: string;
-  isRemote?: boolean;
+  isRemote: boolean;
 };
 
 type Params = Record<never, never>;

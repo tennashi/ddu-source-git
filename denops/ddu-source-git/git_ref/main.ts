@@ -25,7 +25,7 @@ function parseGitRef(gitRef: string): Item<ActionData> {
       word: gitRef,
       display: branch,
       kind: "git_branch",
-      action: { branch: branch },
+      action: { branch: branch, isRemote: false },
     };
   }
 
