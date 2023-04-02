@@ -15,7 +15,11 @@ import {
   collectItems as collectGitLogItems,
 } from "./git_log/main.ts";
 
+import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
+
 export function main(denops: Denops): Promise<void> {
+  const gitRemoteCache = new GitRemoteCache();
+
   denops.dispatcher = {
     async gitStatus(): Promise<Item<GitStatusActionData>[]> {
       const getCwdResult = await getcwd(denops);
@@ -25,7 +29,7 @@ export function main(denops: Denops): Promise<void> {
     async gitRef(): Promise<Item<GitRefActionData>[]> {
       const getCwdResult = await getcwd(denops);
       const cwd = getCwdResult as string;
-      return collectGitRefItems(cwd);
+      return collectGitRefItems(cwd, gitRemoteCache);
     },
     async gitLog(): Promise<Item<GitLogActionData>[]> {
       const getCwdResult = await getcwd(denops);

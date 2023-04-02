@@ -6,9 +6,12 @@ import {
 import { input } from "https://deno.land/x/denops_std@v4.1.0/helper/mod.ts";
 import { executable } from "https://deno.land/x/denops_std@v4.1.0/function/mod.ts";
 
+import { State } from "../ddu-source-git/cache/git_remote/main.ts";
+
 export type ActionData = {
   branch: string;
   isRemote: boolean;
+  remoteState?: State;
 };
 
 type Params = Record<never, never>;
