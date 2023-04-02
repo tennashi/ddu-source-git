@@ -14,3 +14,14 @@ export function runListCommand(
     )
   );
 }
+
+export function dispatchCommand(
+  cmd: string,
+  args: string[],
+  cwd: string,
+): Promise<void> {
+  return new Deno.Command(cmd, {
+    args: args,
+    cwd: cwd,
+  }).output().then();
+}
