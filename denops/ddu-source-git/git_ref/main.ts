@@ -20,7 +20,7 @@ export async function collectItems(
       item.kind === "git_branch" &&
       item.action && "isRemote" in item.action && !item.action.isRemote
     ) {
-      const remoteState = cache.getState(item.action.branch, repoDir);
+      const remoteState = cache.getState(item.action.branch);
       item.action.remoteState = remoteState;
     }
     return item;

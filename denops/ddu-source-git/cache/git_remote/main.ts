@@ -19,18 +19,24 @@ function parseState(raw: string): State {
 
 export class Cache {
   #states: Record<string, State> = {};
+  #repoDir: string;
 
-  getState(branch: string, repoDir: string): State {
-    this.fetchRemote(repoDir);
+  constructor(repoDir: string) {
+    this.#repoDir = repoDir;
+    this.fetchRemote();
+  }
+
+  getState(branch: string): State {
+    this.fetchRemote();
     return this.#states[branch];
   }
 
-  private async fetchRemote(repoDir: string) {
-    await dispatchCommand("git", ["fetch"], repoDir);
+  async fetchRemote() {
+    await dispatchCommand("git", ["fetch"], this.#repoDir);
     const result = await runListCommand("git", [
       "branch",
       "--format=%(refname:short) %(upstream:trackshort)",
-    ], repoDir);
+    ], this.#repoDir);
     result.forEach((line) => {
       const branchName = line.slice(0, line.indexOf(" "));
       const state = line.slice(line.indexOf(" ") + 1);
