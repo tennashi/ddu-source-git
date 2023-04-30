@@ -110,6 +110,12 @@ export class Kind extends BaseKind<Params> {
     },
 
     tag: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
+      if (args.items.length !== 1) {
+        console.warn(
+          "Multiple items were selected. Tag for the first item.",
+        );
+      }
+
       const tagName = await input(args.denops, {
         prompt: "(tag name)> ",
       });
@@ -118,24 +124,14 @@ export class Kind extends BaseKind<Params> {
         return ActionFlags.Persist;
       }
 
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
-
-      if (args.items.length > 1) {
-        console.log("don't support multiple items");
-      }
-
-      const action = args.items[0]?.action as ActionData;
-      const cmd = new Deno.Command("git", {
-        args: ["tag", tagName, action.branch],
-        cwd: cwd,
-      });
-
-      const result = cmd.outputSync();
-
-      if (!result.success) {
-        console.log(decoder.decode(result.stderr));
-      }
+      const targetItem = args.items[0];
+      const action = targetItem.action as ActionData;
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "gitCreateTag",
+        tagName,
+        action.branch,
+      );
 
       return ActionFlags.RefreshItems;
     },
