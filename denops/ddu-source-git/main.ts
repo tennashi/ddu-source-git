@@ -2,6 +2,10 @@ import { Denops } from "https://deno.land/x/denops_std@v4.0.0/mod.ts";
 import { Item } from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
 import { getcwd } from "https://deno.land/x/denops_std@v4.0.0/function/mod.ts";
 import { group } from "https://deno.land/x/denops_std@v4.0.0/autocmd/mod.ts";
+import {
+  assertBoolean,
+  assertString,
+} from "https://deno.land/x/unknownutil@v2.1.0/mod.ts";
 
 import {
   ActionData as GitStatusActionData,
@@ -15,6 +19,7 @@ import {
   ActionData as GitLogActionData,
   collectItems as collectGitLogItems,
 } from "./git_log/main.ts";
+import { gitSwitch, gitSwitchDetach } from "./git_branch/switch.ts";
 
 import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
 
@@ -46,6 +51,14 @@ class GitRepository {
 
   collectGitLogItems(): Promise<Item<GitLogActionData>[]> {
     return collectGitLogItems(this.#repoDir);
+  }
+
+  gitSwitch(branchName: string, isDetach: boolean): Promise<void> {
+    if (isDetach) {
+      return gitSwitchDetach(this.#repoDir, branchName);
+    } else {
+      return gitSwitch(this.#repoDir, branchName);
+    }
   }
 }
 
@@ -99,6 +112,12 @@ export async function main(denops: Denops): Promise<void> {
     },
     gitLog(): Promise<Item<GitLogActionData>[]> {
       return currentRepository.collectGitLogItems();
+    },
+    gitSwitch(branchName: unknown, isDetach: unknown): Promise<void> {
+      assertString(branchName);
+      assertBoolean(isDetach);
+
+      return currentRepository.gitSwitch(branchName, isDetach);
     },
   };
 
