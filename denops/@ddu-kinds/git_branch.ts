@@ -68,31 +68,25 @@ export class Kind extends BaseKind<Params> {
     },
 
     pull: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
+      let remoteName = await input(args.denops, {
+        prompt: "(remote name)> ",
+        text: "origin",
+      });
 
-      for (const item of args.items) {
-        const action = item?.action as ActionData;
-
-        let remoteName = await input(args.denops, {
-          prompt: "(remote name)> ",
-          text: "origin",
-        });
-
-        if (!remoteName) {
-          remoteName = "origin";
-        }
-
-        const cmd = new Deno.Command("git", {
-          args: ["pull", remoteName, action.branch],
-          cwd: cwd,
-        });
-        const result = cmd.outputSync();
-
-        if (!result.success) {
-          console.log(decoder.decode(result.stderr));
-        }
+      if (!remoteName) {
+        remoteName = "origin";
       }
+
+      const branches = args.items.filter((item) =>
+        !(item.action as ActionData).isRemote
+      ).map((item) => (item.action as ActionData).branch);
+
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "gitPull",
+        remoteName,
+        branches,
+      );
 
       return ActionFlags.RefreshItems;
     },
