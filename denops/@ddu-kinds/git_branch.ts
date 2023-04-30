@@ -96,22 +96,15 @@ export class Kind extends BaseKind<Params> {
         prompt: "(branch name)> ",
       });
 
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
-
       if (!branchName) {
         return ActionFlags.Persist;
       }
 
-      const cmd = new Deno.Command("git", {
-        args: ["branch", branchName],
-        cwd: cwd,
-      });
-      const result = cmd.outputSync();
-
-      if (!result.success) {
-        console.log(decoder.decode(result.stderr));
-      }
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "gitCreateBranch",
+        branchName,
+      );
 
       return ActionFlags.RefreshItems;
     },

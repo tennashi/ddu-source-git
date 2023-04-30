@@ -24,6 +24,7 @@ import {
 import { gitSwitch, gitSwitchDetach } from "./git_branch/switch.ts";
 import { gitPush } from "./git_branch/push.ts";
 import { gitPull } from "./git_branch/pull.ts";
+import { gitCreateBranch } from "./git_branch/create.ts";
 
 import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
 
@@ -73,6 +74,10 @@ class GitRepository {
   async gitPull(remoteName: string, branchNames: string[]): Promise<void> {
     await gitPull(this.#repoDir, remoteName, branchNames);
     this.#gitRemoteCache.fetchRemote();
+  }
+
+  gitCreateBranch(branchName: string): Promise<void> {
+    return gitCreateBranch(this.#repoDir, branchName);
   }
 }
 
@@ -144,6 +149,11 @@ export async function main(denops: Denops): Promise<void> {
       assertArray(branchNames, isString);
 
       return currentRepository.gitPull(remoteName, branchNames);
+    },
+    gitCreateBranch(branchName: unknown): Promise<void> {
+      assertString(branchName);
+
+      return currentRepository.gitCreateBranch(branchName);
     },
   };
 
