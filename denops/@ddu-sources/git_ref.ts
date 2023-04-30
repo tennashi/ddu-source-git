@@ -27,11 +27,9 @@ export class Source extends BaseSource<Params> {
           args.options.name,
         );
 
-        const items = await args.denops.call(
-          "denops#request",
+        const items = await args.denops.dispatch(
           "ddu-source-git",
           "gitRef",
-          [],
         ) as Item<ActionData>[];
 
         controller.enqueue(items);

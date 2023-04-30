@@ -11,8 +11,7 @@ export class Source extends BaseSource<Params> {
   gather(args: GatherArguments<Params>): ReadableStream<Item<ActionData>[]> {
     return new ReadableStream({
       async start(controller) {
-        const items = await args.denops.call(
-          "denops#request",
+        const items = await args.denops.dispatch(
           "ddu-source-git",
           "gitStatus",
           [],
