@@ -25,6 +25,7 @@ import { gitSwitch, gitSwitchDetach } from "./git_branch/switch.ts";
 import { gitPush } from "./git_branch/push.ts";
 import { gitPull } from "./git_branch/pull.ts";
 import { gitCreateBranch } from "./git_branch/create.ts";
+import { gitDeleteBranches } from "./git_branch/delete.ts";
 import { gitCreateTag } from "./git_tag/create.ts";
 
 import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
@@ -79,6 +80,10 @@ class GitRepository {
 
   gitCreateBranch(branchName: string): Promise<void> {
     return gitCreateBranch(this.#repoDir, branchName);
+  }
+
+  gitDeleteBranches(branchNames: string[]): Promise<void> {
+    return gitDeleteBranches(this.#repoDir, branchNames);
   }
 
   gitCreateTag(tagName: string, branchName: string): Promise<void> {
@@ -165,6 +170,11 @@ export async function main(denops: Denops): Promise<void> {
       assertString(branchName);
 
       return currentRepository.gitCreateTag(tagName, branchName);
+    },
+    gitDeleteBranches(branchNames: unknown): Promise<void> {
+      assertArray(branchNames, isString);
+
+      return currentRepository.gitDeleteBranches(branchNames);
     },
   };
 

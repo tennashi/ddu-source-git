@@ -137,23 +137,16 @@ export class Kind extends BaseKind<Params> {
     },
 
     delete: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
-
-      const targetBranches = args.items.map((item) => {
+      const branches = args.items.map((item) => {
         const action = item.action as ActionData;
         return action.branch;
       });
 
-      const cmd = new Deno.Command("git", {
-        args: ["branch", "--delete", ...targetBranches],
-        cwd: cwd,
-      });
-      const result = cmd.outputSync();
-
-      if (!result.success) {
-        console.log(decoder.decode(result.stderr));
-      }
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "gitDeleteBranches",
+        branches,
+      );
 
       return ActionFlags.RefreshItems;
     },
