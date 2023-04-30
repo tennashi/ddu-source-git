@@ -22,9 +22,18 @@ class GitRepository {
   #repoDir: string;
   #gitRemoteCache: GitRemoteCache;
 
-  constructor(repoDir: string) {
+  constructor(denops: Denops, repoDir: string) {
     this.#repoDir = repoDir;
-    this.#gitRemoteCache = new GitRemoteCache(repoDir);
+    this.#gitRemoteCache = new GitRemoteCache(
+      repoDir,
+      () => {
+        denops.dispatch("ddu-source-git", "redrawCurrentDdu");
+      },
+    );
+  }
+
+  updateGitRemoteCache(): Promise<void> {
+    return this.#gitRemoteCache.fetchRemote();
   }
 
   collectGitStatusItems(): Promise<Item<GitStatusActionData>[]> {
@@ -45,7 +54,7 @@ export async function main(denops: Denops): Promise<void> {
 
   const getCwdResult = await getcwd(denops);
   const cwd = getCwdResult as string;
-  gitRepositoryStore[cwd] = new GitRepository(cwd);
+  gitRepositoryStore[cwd] = new GitRepository(denops, cwd);
 
   let currentRepository = gitRepositoryStore[cwd];
 
@@ -57,13 +66,29 @@ export async function main(denops: Denops): Promise<void> {
     );
   });
 
+  let currentDduName = "";
+
   denops.dispatcher = {
+    updateGitRemoteCache(): Promise<void> {
+      return currentRepository.updateGitRemoteCache();
+    },
     setCurrentRepository(cwd: unknown): Promise<void> {
       currentRepository = gitRepositoryStore[cwd as string];
       if (!currentRepository) {
-        currentRepository = new GitRepository(cwd as string);
+        currentRepository = new GitRepository(denops, cwd as string);
         gitRepositoryStore[cwd as string] = currentRepository;
       }
+      return Promise.resolve();
+    },
+    setDduName(name: unknown): Promise<void> {
+      currentDduName = name as string;
+      return Promise.resolve();
+    },
+    redrawCurrentDdu(): Promise<void> {
+      if (currentDduName === "") {
+        return Promise.resolve();
+      }
+      denops.dispatch("ddu", "redraw", currentDduName, { refreshItems: true });
       return Promise.resolve();
     },
     gitStatus(): Promise<Item<GitStatusActionData>[]> {

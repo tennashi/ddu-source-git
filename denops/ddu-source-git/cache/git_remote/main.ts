@@ -20,14 +20,15 @@ function parseState(raw: string): State {
 export class Cache {
   #states: Record<string, State> = {};
   #repoDir: string;
+  #onUpdated = () => {};
 
-  constructor(repoDir: string) {
+  constructor(repoDir: string, onUpdated: () => void) {
     this.#repoDir = repoDir;
+    this.#onUpdated = onUpdated;
     this.fetchRemote();
   }
 
   getState(branch: string): State {
-    this.fetchRemote();
     return this.#states[branch];
   }
 
@@ -43,5 +44,7 @@ export class Cache {
 
       this.#states[branchName] = parseState(state);
     });
+
+    this.#onUpdated();
   }
 }
