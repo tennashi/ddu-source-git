@@ -35,7 +35,7 @@ export class Kind extends BaseKind<Params> {
 
       await args.denops.dispatch(
         "ddu-source-git",
-        "gitSwitch",
+        "switchBranch",
         action.branch,
         action.isRemote,
       );
@@ -59,7 +59,7 @@ export class Kind extends BaseKind<Params> {
 
       await args.denops.dispatch(
         "ddu-source-git",
-        "gitPush",
+        "pushBranches",
         remoteName,
         branches,
       );
@@ -83,7 +83,7 @@ export class Kind extends BaseKind<Params> {
 
       await args.denops.dispatch(
         "ddu-source-git",
-        "gitPull",
+        "pullRemoteBranches",
         remoteName,
         branches,
       );
@@ -102,7 +102,7 @@ export class Kind extends BaseKind<Params> {
 
       await args.denops.dispatch(
         "ddu-source-git",
-        "gitCreateBranch",
+        "createBranch",
         branchName,
       );
 
@@ -128,7 +128,7 @@ export class Kind extends BaseKind<Params> {
       const action = targetItem.action as ActionData;
       await args.denops.dispatch(
         "ddu-source-git",
-        "gitCreateTag",
+        "createTag",
         tagName,
         action.branch,
       );
@@ -144,7 +144,7 @@ export class Kind extends BaseKind<Params> {
 
       await args.denops.dispatch(
         "ddu-source-git",
-        "gitDeleteBranches",
+        "deleteBranches",
         branches,
       );
 

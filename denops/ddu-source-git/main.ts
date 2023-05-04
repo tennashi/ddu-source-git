@@ -21,12 +21,12 @@ import {
   ActionData as GitLogActionData,
   collectItems as collectGitLogItems,
 } from "./git_log/main.ts";
-import { gitSwitch, gitSwitchDetach } from "./git_branch/switch.ts";
-import { gitPush } from "./git_branch/push.ts";
-import { gitPull } from "./git_branch/pull.ts";
-import { gitCreateBranch } from "./git_branch/create.ts";
-import { gitDeleteBranches } from "./git_branch/delete.ts";
-import { gitCreateTag } from "./git_tag/create.ts";
+import { switchLocalBranch, switchRemoteBranch } from "./git_branch/switch.ts";
+import { pushBranches } from "./git_branch/push.ts";
+import { pullRemoteBranches } from "./git_branch/pull.ts";
+import { createBranch } from "./git_branch/create.ts";
+import { deleteBranches } from "./git_branch/delete.ts";
+import { createTag } from "./git_tag/create.ts";
 import {
   getCommitMessageBody,
   setCommitMessage,
@@ -66,34 +66,37 @@ class GitRepository {
     return collectGitLogItems(this.#repoDir);
   }
 
-  gitSwitch(branchName: string, isDetach: boolean): Promise<void> {
-    if (isDetach) {
-      return gitSwitchDetach(this.#repoDir, branchName);
+  switchBranch(branchName: string, isRemote: boolean): Promise<void> {
+    if (isRemote) {
+      return switchRemoteBranch(this.#repoDir, branchName);
     } else {
-      return gitSwitch(this.#repoDir, branchName);
+      return switchLocalBranch(this.#repoDir, branchName);
     }
   }
 
-  async gitPush(remoteName: string, branchNames: string[]): Promise<void> {
-    await gitPush(this.#repoDir, remoteName, branchNames);
+  async pushBranches(remoteName: string, branchNames: string[]): Promise<void> {
+    await pushBranches(this.#repoDir, remoteName, branchNames);
     this.#gitRemoteCache.fetchRemote();
   }
 
-  async gitPull(remoteName: string, branchNames: string[]): Promise<void> {
-    await gitPull(this.#repoDir, remoteName, branchNames);
+  async pullRemoteBranches(
+    remoteName: string,
+    branchNames: string[],
+  ): Promise<void> {
+    await pullRemoteBranches(this.#repoDir, remoteName, branchNames);
     this.#gitRemoteCache.fetchRemote();
   }
 
-  gitCreateBranch(branchName: string): Promise<void> {
-    return gitCreateBranch(this.#repoDir, branchName);
+  createBranch(branchName: string): Promise<void> {
+    return createBranch(this.#repoDir, branchName);
   }
 
-  gitDeleteBranches(branchNames: string[]): Promise<void> {
-    return gitDeleteBranches(this.#repoDir, branchNames);
+  deleteBranches(branchNames: string[]): Promise<void> {
+    return deleteBranches(this.#repoDir, branchNames);
   }
 
-  gitCreateTag(tagName: string, branchName: string): Promise<void> {
-    return gitCreateTag(this.#repoDir, tagName, branchName);
+  createTag(tagName: string, branchName: string): Promise<void> {
+    return createTag(this.#repoDir, tagName, branchName);
   }
 
   async editCommitMessageSubject(
@@ -168,39 +171,42 @@ export async function main(denops: Denops): Promise<void> {
     gitLog(): Promise<Item<GitLogActionData>[]> {
       return currentRepository.collectGitLogItems();
     },
-    gitSwitch(branchName: unknown, isDetach: unknown): Promise<void> {
+    switchBranch(branchName: unknown, isRemote: unknown): Promise<void> {
       assertString(branchName);
-      assertBoolean(isDetach);
+      assertBoolean(isRemote);
 
-      return currentRepository.gitSwitch(branchName, isDetach);
+      return currentRepository.switchBranch(branchName, isRemote);
     },
-    gitPush(remoteName: unknown, branchNames: unknown): Promise<void> {
+    pushBranches(remoteName: unknown, branchNames: unknown): Promise<void> {
       assertString(remoteName);
       assertArray(branchNames, isString);
 
-      return currentRepository.gitPush(remoteName, branchNames);
+      return currentRepository.pushBranches(remoteName, branchNames);
     },
-    gitPull(remoteName: unknown, branchNames: unknown): Promise<void> {
+    pullRemoteBranches(
+      remoteName: unknown,
+      branchNames: unknown,
+    ): Promise<void> {
       assertString(remoteName);
       assertArray(branchNames, isString);
 
-      return currentRepository.gitPull(remoteName, branchNames);
+      return currentRepository.pullRemoteBranches(remoteName, branchNames);
     },
-    gitCreateBranch(branchName: unknown): Promise<void> {
+    createBranch(branchName: unknown): Promise<void> {
       assertString(branchName);
 
-      return currentRepository.gitCreateBranch(branchName);
+      return currentRepository.createBranch(branchName);
     },
-    gitCreateTag(tagName: unknown, branchName: unknown): Promise<void> {
+    createTag(tagName: unknown, branchName: unknown): Promise<void> {
       assertString(tagName);
       assertString(branchName);
 
-      return currentRepository.gitCreateTag(tagName, branchName);
+      return currentRepository.createTag(tagName, branchName);
     },
-    gitDeleteBranches(branchNames: unknown): Promise<void> {
+    deleteBranches(branchNames: unknown): Promise<void> {
       assertArray(branchNames, isString);
 
-      return currentRepository.gitDeleteBranches(branchNames);
+      return currentRepository.deleteBranches(branchNames);
     },
     editCommitMessageSubject(
       commitHash: unknown,

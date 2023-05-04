@@ -1,6 +1,6 @@
 import { dispatchCommand } from "../runner/main.ts";
 
-export async function gitPull(
+export async function pullRemoteBranches(
   repoDir: string,
   remoteName: string,
   branchNames: string[],

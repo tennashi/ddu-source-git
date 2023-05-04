@@ -1,6 +1,6 @@
 import { dispatchCommand } from "../runner/main.ts";
 
-export async function gitPush(
+export async function pushBranches(
   repoDir: string,
   remoteName: string,
   branchNames: string[],

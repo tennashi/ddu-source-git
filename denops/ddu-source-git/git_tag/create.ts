@@ -1,6 +1,6 @@
 import { dispatchCommand } from "../runner/main.ts";
 
-export function gitCreateTag(
+export function createTag(
   repoDir: string,
   tagName: string,
   branchName: string,

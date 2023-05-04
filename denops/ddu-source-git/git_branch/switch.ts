@@ -1,16 +1,16 @@
 import { dispatchCommand } from "../runner/main.ts";
 
-export async function gitSwitch(
+export async function switchLocalBranch(
   repoDir: string,
   branchName: string,
 ): Promise<void> {
   return await dispatchCommand("git", ["switch", branchName], repoDir);
 }
 
-export async function gitSwitchDetach(repoDir: string, refName: string) {
+export async function switchRemoteBranch(repoDir: string, refName: string) {
   return await dispatchCommand(
     "git",
-    ["switch", "--dispatch", refName],
+    ["switch", "--detach", refName],
     repoDir,
   );
 }

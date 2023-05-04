@@ -1,6 +1,6 @@
 import { dispatchCommand } from "../runner/main.ts";
 
-export function gitCreateBranch(
+export function createBranch(
   repoDir: string,
   branchName: string,
 ): Promise<void> {

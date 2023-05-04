@@ -1,6 +1,6 @@
 import { dispatchCommand } from "../runner/main.ts";
 
-export function gitDeleteBranches(
+export function deleteBranches(
   repoDir: string,
   branchNames: string[],
 ): Promise<void> {
