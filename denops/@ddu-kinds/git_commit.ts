@@ -14,47 +14,6 @@ export type ActionData = {
 
 type Params = Record<never, never>;
 
-const decoder = new TextDecoder();
-
-function getMessageBody(cwd: string, commitHash: string): string {
-  const cmd = new Deno.Command("git", {
-    args: ["show", "--no-patch", "--format=%b", commitHash],
-    cwd: cwd,
-  });
-  const result = cmd.outputSync();
-  if (!result.success) {
-    console.log(decoder.decode(result.stderr));
-  }
-  return decoder.decode(result.stdout).trimEnd();
-}
-
-function setMessage(cwd: string, paragraphs: string[]) {
-  const cmd = new Deno.Command("git", {
-    args: ["commit", "--allow-empty"].concat(
-      paragraphs.flatMap((paragraph) => ["-m", paragraph]),
-    ),
-    cwd: cwd,
-  });
-
-  const result = cmd.outputSync();
-  if (!result.success) {
-    console.log(decoder.decode(result.stderr));
-  }
-}
-
-function autosquash(cwd: string, commitHash: string) {
-  const cmd = new Deno.Command("git", {
-    args: ["rebase", "-i", "--autosquash", `${commitHash}~1`],
-    cwd: cwd,
-    env: { GIT_SEQUENCE_EDITOR: "true" },
-  });
-
-  const result = cmd.outputSync();
-  if (!result.success) {
-    console.log(decoder.decode(result.stderr));
-  }
-}
-
 export class Kind extends BaseKind<Params> {
   actions: Record<
     string,
