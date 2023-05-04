@@ -1,13 +1,15 @@
 const decoder = new TextDecoder();
 
-export function runListCommand(
+export async function runListCommand(
   cmd: string,
   args: string[],
   cwd: string,
+  env?: Record<string, string>,
 ): Promise<string[]> {
-  return new Deno.Command(cmd, {
+  return await new Deno.Command(cmd, {
     args: args,
     cwd: cwd,
+    env: env,
   }).output().then((result) =>
     decoder.decode(result.stdout).split(/\r?\n/).filter((line) =>
       line.length > 0
@@ -15,13 +17,26 @@ export function runListCommand(
   );
 }
 
-export function dispatchCommand(
+export async function runGetCommand(
   cmd: string,
   args: string[],
   cwd: string,
+  env?: Record<string, string>,
+): Promise<string> {
+  return await new Deno.Command(cmd, { args: args, cwd: cwd, env: env })
+    .output()
+    .then((result) => decoder.decode(result.stdout));
+}
+
+export async function dispatchCommand(
+  cmd: string,
+  args: string[],
+  cwd: string,
+  env?: Record<string, string>,
 ): Promise<void> {
-  return new Deno.Command(cmd, {
+  return await new Deno.Command(cmd, {
     args: args,
     cwd: cwd,
+    env: env,
   }).output().then();
 }

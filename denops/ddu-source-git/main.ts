@@ -27,6 +27,10 @@ import { gitPull } from "./git_branch/pull.ts";
 import { gitCreateBranch } from "./git_branch/create.ts";
 import { gitDeleteBranches } from "./git_branch/delete.ts";
 import { gitCreateTag } from "./git_tag/create.ts";
+import {
+  getCommitMessageBody,
+  setCommitMessage,
+} from "./git_commit/message.ts";
 
 import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
 
@@ -88,6 +92,15 @@ class GitRepository {
 
   gitCreateTag(tagName: string, branchName: string): Promise<void> {
     return gitCreateTag(this.#repoDir, tagName, branchName);
+  }
+
+  async editCommitMessageSubject(
+    commitHash: string,
+    subject: string,
+  ): Promise<void> {
+    const currentBody = await getCommitMessageBody(this.#repoDir, commitHash);
+    const commitMessage = [subject, currentBody];
+    await setCommitMessage(this.#repoDir, commitHash, commitMessage);
   }
 }
 
@@ -175,6 +188,15 @@ export async function main(denops: Denops): Promise<void> {
       assertArray(branchNames, isString);
 
       return currentRepository.gitDeleteBranches(branchNames);
+    },
+    editCommitMessageSubject(
+      commitHash: unknown,
+      subject: unknown,
+    ): Promise<void> {
+      assertString(commitHash);
+      assertString(subject);
+
+      return currentRepository.editCommitMessageSubject(commitHash, subject);
     },
   };
 

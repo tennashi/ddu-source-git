@@ -63,24 +63,32 @@ export class Kind extends BaseKind<Params> {
     editSubject: async (
       args: ActionArguments<Params>,
     ): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
-
-      for (const item of args.items) {
-        const action = item?.action as ActionData;
-
-        const commitSubject = await input(args.denops, {
-          prompt: "(commit subject)> ",
-        }) as string;
-
-        const currentBody = getMessageBody(cwd, action.commitHash);
-        setMessage(cwd, [
-          `amend! ${action.commitHash}`,
-          commitSubject,
-          currentBody,
-        ]);
-        autosquash(cwd, action.commitHash);
+      if (args.items.length !== 1) {
+        console.warn(
+          "Multiple items were selected. Edit subject for the first item.",
+        );
       }
+
+      const commitSubject = await input(args.denops, {
+        prompt: "(commit subject)> ",
+      }) as string;
+
+      if (commitSubject.length === 0) {
+        console.warn(
+          "The subject must not be empty. ",
+        );
+        return ActionFlags.Persist;
+      }
+
+      const targetItem = args.items[0];
+      const action = targetItem.action as ActionData;
+
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "editCommitMessageSubject",
+        action.commitHash,
+        commitSubject,
+      );
 
       return ActionFlags.RefreshItems;
     },
