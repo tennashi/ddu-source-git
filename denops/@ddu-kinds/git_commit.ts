@@ -93,41 +93,31 @@ export class Kind extends BaseKind<Params> {
       return ActionFlags.RefreshItems;
     },
     fixupTo: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
-
       const targetCommit = await input(args.denops, {
         prompt: "(commit hash)> ",
-        completion: (
+        completion: async (
           _arglead: string,
           _cmdline: string,
           _cursorpos: number,
-        ): string[] | Promise<string[]> => {
-          const cmd = new Deno.Command("git", {
-            args: ["log", "--oneline"],
-            cwd: cwd,
-          });
-
-          const result = cmd.outputSync();
-          if (!result.success) {
-            console.log(decoder.decode(result.stderr));
-          }
-
-          return decoder.decode(result.stdout).split(/\r?\n/);
+        ): Promise<string[]> => {
+          return await args.denops.dispatch(
+            "ddu-source-git",
+            "listCommitLog",
+          ) as string[];
         },
       }) as string;
       const targetHash = targetCommit.slice(0, targetCommit.indexOf(" "));
 
-      for (const item of args.items) {
-        const action = item?.action as ActionData;
-        setMessage(cwd, [
-          `amend! ${action.commitHash}`,
-          `fixup! ${targetHash}`,
-        ]);
-        autosquash(cwd, action.commitHash);
-      }
+      const commits = args.items.map((item) =>
+        (item.action as ActionData).commitHash
+      );
 
-      autosquash(cwd, targetHash);
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "fixupCommitsTo",
+        targetHash,
+        commits,
+      );
 
       return ActionFlags.RefreshItems;
     },

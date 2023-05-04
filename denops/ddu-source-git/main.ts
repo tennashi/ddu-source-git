@@ -31,6 +31,8 @@ import {
   getCommitMessageBody,
   setCommitMessage,
 } from "./git_commit/message.ts";
+import { fixupCommitsTo } from "./git_commit/fixup_to.ts";
+import { listCommitLog } from "./git_commit/list_log.ts";
 
 import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
 
@@ -101,6 +103,17 @@ class GitRepository {
     const currentBody = await getCommitMessageBody(this.#repoDir, commitHash);
     const commitMessage = [subject, currentBody];
     await setCommitMessage(this.#repoDir, commitHash, commitMessage);
+  }
+
+  fixupCommitsTo(
+    targetCommitHash: string,
+    commits: string[],
+  ): Promise<void> {
+    return fixupCommitsTo(this.#repoDir, targetCommitHash, commits);
+  }
+
+  listCommitLog(): Promise<string[]> {
+    return listCommitLog(this.#repoDir);
   }
 }
 
@@ -197,6 +210,15 @@ export async function main(denops: Denops): Promise<void> {
       assertString(subject);
 
       return currentRepository.editCommitMessageSubject(commitHash, subject);
+    },
+    fixupCommitsTo(targetCommitHash: unknown, commits: unknown): Promise<void> {
+      assertString(targetCommitHash);
+      assertArray(commits, isString);
+
+      return currentRepository.fixupCommitsTo(targetCommitHash, commits);
+    },
+    listCommitLog(): Promise<string[]> {
+      return currentRepository.listCommitLog();
     },
   };
 
