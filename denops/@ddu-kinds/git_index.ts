@@ -12,18 +12,6 @@ export type ActionData = {
 
 type Params = Record<never, never>;
 
-const decoder = new TextDecoder();
-
-function getRepositoryRoot(cwd: string): string {
-  const cmd = new Deno.Command("git", {
-    args: ["rev-parse", "--show-toplevel"],
-    cwd: cwd,
-  });
-
-  const result = cmd.outputSync();
-  return decoder.decode(result.stdout).trim();
-}
-
 export class Kind extends BaseKind<Params> {
   actions: Record<
     string,
@@ -32,22 +20,15 @@ export class Kind extends BaseKind<Params> {
     restoreStaged: async (
       args: ActionArguments<Params>,
     ): Promise<ActionFlags> => {
-      const getCwdResult = await args.denops.call("getcwd");
-      const cwd = getCwdResult as string;
+      const filePathes = args.items.map((item) =>
+        (item.action as ActionData).fileStatus.path
+      );
 
-      for (const item of args.items) {
-        const action = item?.action as ActionData;
-
-        const cmd = new Deno.Command("git", {
-          args: ["restore", "--staged", action.fileStatus.path],
-          cwd: cwd,
-        });
-        const result = cmd.outputSync();
-
-        if (!result.success) {
-          console.log(decoder.decode(result.stderr));
-        }
-      }
+      await args.denops.dispatch(
+        "ddu-source-git",
+        "restoreStagedChanges",
+        filePathes,
+      );
 
       return ActionFlags.RefreshItems;
     },

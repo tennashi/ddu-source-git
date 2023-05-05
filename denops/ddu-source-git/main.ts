@@ -33,6 +33,7 @@ import {
 } from "./git_commit/message.ts";
 import { fixupCommitsTo } from "./git_commit/fixup_to.ts";
 import { listCommitLog } from "./git_commit/list_log.ts";
+import { restoreStagedChanges } from "./git_staged_file/restore.ts";
 
 import { Cache as GitRemoteCache } from "./cache/git_remote/main.ts";
 
@@ -117,6 +118,10 @@ class GitRepository {
 
   listCommitLog(): Promise<string[]> {
     return listCommitLog(this.#repoDir);
+  }
+
+  restoreStagedChanges(filePathes: string[]): Promise<void> {
+    return restoreStagedChanges(this.#repoDir, filePathes);
   }
 }
 
@@ -225,6 +230,11 @@ export async function main(denops: Denops): Promise<void> {
     },
     listCommitLog(): Promise<string[]> {
       return currentRepository.listCommitLog();
+    },
+    restoreStagedChanges(filePathes: unknown): Promise<void> {
+      assertArray(filePathes, isString);
+
+      return currentRepository.restoreStagedChanges(filePathes);
     },
   };
 
