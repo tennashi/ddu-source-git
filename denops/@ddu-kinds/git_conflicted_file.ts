@@ -11,8 +11,6 @@ export type ActionData = {
 
 type Params = Record<never, never>;
 
-const decoder = new TextDecoder();
-
 export class Kind extends WorkingTreeKind {
   constructor() {
     super();

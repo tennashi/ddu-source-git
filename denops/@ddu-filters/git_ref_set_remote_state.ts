@@ -8,13 +8,6 @@ import { State } from "../ddu-source-git/cache/git_remote/main.ts";
 
 type Params = Record<never, never>;
 
-const encoder = new TextEncoder();
-const decoder = new TextDecoder();
-
-function byteLength(input: string): number {
-  return encoder.encode(input).length;
-}
-
 function remoteStateMarker(state: State): string {
   switch (state) {
     case "pushable":
@@ -29,11 +22,8 @@ function remoteStateMarker(state: State): string {
 }
 
 export class Filter extends BaseFilter<Params> {
-  async filter(args: FilterArguments<Params>): Promise<DduItem[]> {
-    const getCwdResult = await args.denops.call("getcwd");
-    const cwd = getCwdResult as string;
-
-    return args.items.map((item: DduItem): DduItem => {
+  override filter(args: FilterArguments<Params>): Promise<DduItem[]> {
+    return Promise.resolve(args.items.map((item: DduItem): DduItem => {
       const kind = item.kind || "git_branch";
       switch (kind) {
         case "git_branch": {
@@ -54,7 +44,7 @@ export class Filter extends BaseFilter<Params> {
       }
 
       return item;
-    });
+    }));
   }
 
   params(): Params {
