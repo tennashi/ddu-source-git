@@ -2,9 +2,9 @@ import {
   ActionArguments,
   ActionFlags,
   BaseKind,
-} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
-import { input } from "https://deno.land/x/denops_std@v4.1.0/helper/mod.ts";
-import { executable } from "https://deno.land/x/denops_std@v4.1.0/function/mod.ts";
+} from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
+import { input } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
+import { executable } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 
 import { State } from "../ddu-source-git/cache/git_remote/main.ts";
 
