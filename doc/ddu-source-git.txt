@@ -72,6 +72,19 @@ EXAMPLES                                             *ddu-source-git-examples*
 <
 
 ==============================================================================
+KINDS                                                           *ddu-kind-git*
+
+------------------------------------------------------------------------------
+GITBRANCH KIND PARAMS                             *ddu-kind-git_branch-params*
+
+switchToTrackRemote            *ddu-kind-git_branch-param-switchToTrackRemote*
+
+		If it is true, when "switch" action is called for a remote
+		branch, new branch with same name is created to track the
+		remote one.
+		See `--guess` option in `git switch --help` for detail.
+
+==============================================================================
 ACTIONS                                               *ddu-source-git-actions*
 
 ------------------------------------------------------------------------------
