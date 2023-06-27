@@ -18,7 +18,7 @@ export async function collectItems(
     const item = parseGitRef(gitRef);
     if (
       item.kind === "git_branch" &&
-      item.action && "isRemote" in item.action && !item.action.isRemote
+      item.action?.kind == "branch" && !item.action.isRemote
     ) {
       const remoteState = cache.getState(item.action.branch);
       item.action.remoteState = remoteState;
@@ -35,18 +35,24 @@ function parseGitRef(gitRef: string): Item<ActionData> {
       word: gitRef,
       display: branch,
       kind: "git_branch",
-      action: { branch: branch, isRemote: false },
+      action: {
+        kind: "branch",
+        branch: branch,
+        isRemote: false,
+        remoteState: "equal",
+      },
     };
   }
 
   if (gitRef.startsWith("refs/remotes/")) {
     const branch = gitRef.slice("refs/remotes/".length);
+    const localBranch = branch.slice(branch.indexOf("/") + 1);
 
     return {
       word: gitRef,
       display: branch,
       kind: "git_branch",
-      action: { branch: branch, isRemote: true },
+      action: { kind: "branch", branch, localBranch, isRemote: true },
     };
   }
 
@@ -57,7 +63,7 @@ function parseGitRef(gitRef: string): Item<ActionData> {
       word: gitRef,
       display: tag,
       kind: "git_tag",
-      action: { tag: tag },
+      action: { kind: "tag", tag: tag },
     };
   }
 

@@ -7,7 +7,10 @@ export async function switchLocalBranch(
   return await dispatchCommand("git", ["switch", branchName], repoDir);
 }
 
-export async function switchRemoteBranch(repoDir: string, refName: string) {
+export async function switchRemoteBranch(
+  repoDir: string,
+  refName: string,
+) {
   return await dispatchCommand(
     "git",
     ["switch", "--detach", refName],

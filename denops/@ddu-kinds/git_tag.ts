@@ -6,6 +6,7 @@ import {
 import { input } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
 
 export type ActionData = {
+  kind: "tag";
   tag: string;
 };
 

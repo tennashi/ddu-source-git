@@ -9,12 +9,20 @@ import { executable } from "https://deno.land/x/denops_std@v5.0.1/function/mod.t
 import { State } from "../ddu-source-git/cache/git_remote/main.ts";
 
 export type ActionData = {
+  kind: "branch";
   branch: string;
-  isRemote: boolean;
-  remoteState?: State;
+  isRemote: false;
+  remoteState: State;
+} | {
+  kind: "branch";
+  branch: string;
+  localBranch: string;
+  isRemote: true;
 };
 
-type Params = Record<never, never>;
+type Params = {
+  switchToTrackRemote?: boolean;
+};
 
 const decoder = new TextDecoder();
 
@@ -33,12 +41,21 @@ export class Kind extends BaseKind<Params> {
       const targetItem = args.items[0];
       const action = targetItem.action as ActionData;
 
-      await args.denops.dispatch(
-        "ddu-source-git",
-        "switchBranch",
-        action.branch,
-        action.isRemote,
-      );
+      if (action.isRemote && args.kindParams.switchToTrackRemote) {
+        await args.denops.dispatch(
+          "ddu-source-git",
+          "switchBranch",
+          action.localBranch,
+          false,
+        );
+      } else {
+        await args.denops.dispatch(
+          "ddu-source-git",
+          "switchBranch",
+          action.branch,
+          action.isRemote,
+        );
+      }
 
       return ActionFlags.None;
     },
