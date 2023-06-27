@@ -152,7 +152,7 @@ export class Kind extends BaseKind<Params> {
     },
 
     create_pr: async (args: ActionArguments<Params>): Promise<ActionFlags> => {
-      const hasGitHubCli = await executable(args.denops, "gh") as boolean;
+      const hasGitHubCli = await executable(args.denops, "gh") == 1;
       if (!hasGitHubCli) {
         console.log("create_pr action requires `gh` command.");
         return ActionFlags.Persist;

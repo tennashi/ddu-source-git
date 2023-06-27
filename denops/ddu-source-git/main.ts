@@ -2,12 +2,7 @@ import { Denops } from "https://deno.land/x/denops_std@v5.0.1/mod.ts";
 import { Item } from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
 import { getcwd } from "https://deno.land/x/denops_std@v5.0.1/function/mod.ts";
 import { group } from "https://deno.land/x/denops_std@v5.0.1/autocmd/mod.ts";
-import {
-  assertArray,
-  assertBoolean,
-  assertString,
-  isString,
-} from "https://deno.land/x/unknownutil@v3.2.0/mod.ts";
+import { assert, is } from "https://deno.land/x/unknownutil@v3.2.0/mod.ts";
 
 import {
   ActionData as GitStatusActionData,
@@ -177,14 +172,14 @@ export async function main(denops: Denops): Promise<void> {
       return currentRepository.collectGitLogItems();
     },
     switchBranch(branchName: unknown, isRemote: unknown): Promise<void> {
-      assertString(branchName);
-      assertBoolean(isRemote);
+      assert(branchName, is.String);
+      assert(isRemote, is.Boolean);
 
       return currentRepository.switchBranch(branchName, isRemote);
     },
     pushBranches(remoteName: unknown, branchNames: unknown): Promise<void> {
-      assertString(remoteName);
-      assertArray(branchNames, isString);
+      assert(remoteName, is.String);
+      assert(branchNames, is.ArrayOf(is.String));
 
       return currentRepository.pushBranches(remoteName, branchNames);
     },
@@ -192,24 +187,24 @@ export async function main(denops: Denops): Promise<void> {
       remoteName: unknown,
       branchNames: unknown,
     ): Promise<void> {
-      assertString(remoteName);
-      assertArray(branchNames, isString);
+      assert(remoteName, is.String);
+      assert(branchNames, is.ArrayOf(is.String));
 
       return currentRepository.pullRemoteBranches(remoteName, branchNames);
     },
     createBranch(branchName: unknown): Promise<void> {
-      assertString(branchName);
+      assert(branchName, is.String);
 
       return currentRepository.createBranch(branchName);
     },
     createTag(tagName: unknown, branchName: unknown): Promise<void> {
-      assertString(tagName);
-      assertString(branchName);
+      assert(tagName, is.String);
+      assert(branchName, is.String);
 
       return currentRepository.createTag(tagName, branchName);
     },
     deleteBranches(branchNames: unknown): Promise<void> {
-      assertArray(branchNames, isString);
+      assert(branchNames, is.ArrayOf(is.String));
 
       return currentRepository.deleteBranches(branchNames);
     },
@@ -217,14 +212,14 @@ export async function main(denops: Denops): Promise<void> {
       commitHash: unknown,
       subject: unknown,
     ): Promise<void> {
-      assertString(commitHash);
-      assertString(subject);
+      assert(commitHash, is.String);
+      assert(subject, is.String);
 
       return currentRepository.editCommitMessageSubject(commitHash, subject);
     },
     fixupCommitsTo(targetCommitHash: unknown, commits: unknown): Promise<void> {
-      assertString(targetCommitHash);
-      assertArray(commits, isString);
+      assert(targetCommitHash, is.String);
+      assert(commits, is.ArrayOf(is.String));
 
       return currentRepository.fixupCommitsTo(targetCommitHash, commits);
     },
@@ -232,7 +227,7 @@ export async function main(denops: Denops): Promise<void> {
       return currentRepository.listCommitLog();
     },
     restoreStagedChanges(filePathes: unknown): Promise<void> {
-      assertArray(filePathes, isString);
+      assert(filePathes, is.ArrayOf(is.String));
 
       return currentRepository.restoreStagedChanges(filePathes);
     },
