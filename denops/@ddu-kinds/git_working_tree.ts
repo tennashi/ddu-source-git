@@ -2,7 +2,7 @@ import {
   ActionArguments,
   ActionFlags,
   BaseKind,
-} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+} from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
 
 import { FileStatus } from "../ddu-source-git/git_status/file_status.ts";
 

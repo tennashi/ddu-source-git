@@ -3,9 +3,9 @@ import {
   ActionFlags,
   BaseKind,
   Previewer,
-} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
-import { GetPreviewerArguments } from "https://deno.land/x/ddu_vim@v2.5.0/base/kind.ts";
-import { input } from "https://deno.land/x/denops_std@v4.1.0/helper/mod.ts";
+} from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
+import { GetPreviewerArguments } from "https://deno.land/x/ddu_vim@v3.2.7/base/kind.ts";
+import { input } from "https://deno.land/x/denops_std@v5.0.1/helper/mod.ts";
 
 export type ActionData = {
   commitHash: string;

@@ -2,8 +2,8 @@ import {
   BaseFilter,
   DduItem,
   ItemHighlight,
-} from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
-import { FilterArguments } from "https://deno.land/x/ddu_vim@v2.5.0/base/filter.ts";
+} from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
+import { FilterArguments } from "https://deno.land/x/ddu_vim@v3.2.7/base/filter.ts";
 
 import { ActionData as GitWorkingTreeActionData } from "../@ddu-kinds/git_working_tree.ts";
 import { ActionData as GitIndexActionData } from "../@ddu-kinds/git_index.ts";

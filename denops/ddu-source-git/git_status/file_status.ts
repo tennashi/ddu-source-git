@@ -1,12 +1,6 @@
-import { Item } from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+import { Item } from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
 
 import { ActionData } from "./main.ts";
-
-const encoder = new TextEncoder();
-
-function byteLength(input: string): number {
-  return encoder.encode(input).length;
-}
 
 type State =
   | "unmodified"

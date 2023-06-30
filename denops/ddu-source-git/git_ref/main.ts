@@ -1,4 +1,4 @@
-import { Item } from "https://deno.land/x/ddu_vim@v2.5.0/types.ts";
+import { Item } from "https://deno.land/x/ddu_vim@v3.2.7/types.ts";
 
 import { runListCommand } from "../runner/main.ts";
 import { Cache as GitRemoteCache } from "../cache/git_remote/main.ts";
